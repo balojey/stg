@@ -1,0 +1,93 @@
+{% extends "base.html" %} {% block content %}
+<div class="container text-center">
+  <div class="row mt-4 gx-5">
+    <div class="col-md">
+      <form method="POST" action="/" enctype="multipart/form-data">
+        {{encode_form.hidden_tag()}}
+        <fieldset>
+          <legend><h1>Encode your image</h1></legend>
+          <div class="mb-3">
+            <div class="form-group">
+              {{ encode_form.secret_text.label(class="form-control-label m-3")
+              }} {% if encode_form.secret_text.errors %} {{
+              encode_form.secret_text(class="form-control form-control-lg
+              is-invalid") }}
+              <div class="invalid-feedback">
+                {% for error in encode_form.secret_text.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+              {% else %} {{ encode_form.secret_text(class="form-control
+              form-control-lg", rows=7, cols=13, maxlength=500) }} {% endif %}
+            </div>
+          </div>
+          <div class="mb-3">
+            <div class="form-group">
+              {{ encode_form.image.label(class="form-control-label m-3") }} {%
+              if encode_form.image.errors %} {{
+              encode_form.image(class="form-control form-control-lg is-invalid")
+              }}
+              <div class="invalid-feedback">
+                {% for error in encode_form.image.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+              {% else %} {{ encode_form.image(class="form-control
+              form-control-lg") }} {% endif %}
+            </div>
+          </div>
+          <div class="form-group">
+            {{encode_form.submit(class="btn btn-primary")}}
+          </div>
+        </fieldset>
+      </form>
+      {% if filename %}
+      <div class="mt-4 border py-3 rounded">
+        <strong>You have successfully encoded your image</strong>
+        <p>You may download it here</p>
+        <a
+          href="{{ url_for('download', filename=filename) }}"
+          ,
+          download="{{ filename.png }}"
+          class="btn btn-primary"
+          >Download</a
+        >
+      </div>
+      {% endif %}
+    </div>
+    <div class="col-md dec">
+      <form method="POST" action="/" enctype="multipart/form-data">
+        {{encode_form.hidden_tag()}}
+        <fieldset>
+          <legend><h1>Decode your image</h1></legend>
+          <div class="mb-3">
+            <div class="form-group">
+              {{ decode_form.image.label(class="form-control-label m-3") }} {%
+              if decode_form.image.errors %} {{
+              decode_form.image(class="form-control form-control-lg is-invalid")
+              }}
+              <div class="invalid-feedback">
+                {% for error in decode_form.image.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+              {% else %} {{ decode_form.image(class="form-control
+              form-control-lg") }} {% endif %}
+            </div>
+          </div>
+          <div class="form-group">
+            {{decode_form.submit(class="btn btn-primary")}}
+          </div>
+        </fieldset>
+      </form>
+      {% if decoded_text %}
+      <div class="mt-4 border py-3 rounded mb-4">
+        <strong>You have successfully decoded your image</strong>
+        <p>Your secret message is</p>
+        <p class="lead">{{ decoded_text }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

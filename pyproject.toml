@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "stg"
+version = "0.1.0"
+description = ""
+authors = ["Ademola Balogun <balotech514@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pillow = "^10.0.0"
+quart = "^0.18.4"
+quart-wtf = "^0.0.1"
+quart-uploads = "^0.0.1"
+python-dotenv = "^1.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = "stg:run"
