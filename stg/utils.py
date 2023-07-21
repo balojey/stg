@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from .steganography.steganography.steganography import Steganography
+from ..steganography.steganography.steganography import Steganography
 import os, random, string
 
 
