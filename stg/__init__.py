@@ -25,7 +25,7 @@ app.config["WTF_CSRF_ENABLED"] = os.getenv("WTF_CSRF_ENABLED")
 
 
 def run() -> None:
-    app.run(debug=True, use_reloader=True)
+    app.run(debug=False, use_reloader=True)
 
 
 @app.route("/", methods=["GET", "POST"])
