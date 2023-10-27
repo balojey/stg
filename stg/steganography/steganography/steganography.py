@@ -6,7 +6,7 @@ from PIL import Image
 import random
 import binascii
 
-DIST = 8
+DIST = 32
 
 
 def normalize_pixel(r, g, b):

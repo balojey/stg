@@ -21,6 +21,6 @@ class EncodeForm(DecodeForm):
 
 class EncodeFileForm(DecodeForm):
     text_file = FileField(
-        "Select input file", validators=[FileRequired(), FileAllowed(["txt", "docx"])]
+        "Select input file", validators=[FileRequired(), FileAllowed(["txt"])]
     )
     submit = SubmitField("Encode")

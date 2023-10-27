@@ -11,6 +11,7 @@ from quart_wtf.csrf import CSRFProtect
 from dotenv import load_dotenv
 import os
 from werkzeug.utils import secure_filename
+import codecs
 from .forms import EncodeForm, DecodeForm, EncodeFileForm
 from .utils import encode, decode, rename, get_text_from_file, write_text_to_file
 
@@ -34,7 +35,7 @@ async def index():
     decode_form = await DecodeForm().create_form()
 
     if await encode_form.validate_on_submit():
-        secret_text = encode_form.secret_text.data
+        secret_text = codecs.encode(encode_form.secret_text.data, "rot_13")
         image = encode_form.image.data
         filename = secure_filename(image.filename)
         await image.save(os.path.join(app.instance_path, "inputs", filename))
@@ -70,8 +71,11 @@ async def index():
         filename = await rename(filename, os.path.join(app.instance_path, "inputs"))
 
         # decode text from image
-        decoded_text = await decode(
-            os.path.join(app.instance_path, "inputs", filename),
+        decoded_text = codecs.decode(
+            await decode(
+                os.path.join(app.instance_path, "inputs", filename),
+            ),
+            "rot_13",
         )
 
         # delete input file
@@ -142,7 +146,7 @@ async def file():
         await encode(
             os.path.join(app.instance_path, "inputs", image_filename),
             os.path.join(app.instance_path, "outputs", image_filename),
-            secret_text,
+            codecs.encode(secret_text, "rot_13"),
         )
 
         # delete input file
@@ -168,8 +172,11 @@ async def file():
         )
 
         # decode text from image
-        decoded_text = await decode(
-            os.path.join(app.instance_path, "inputs", image_filename),
+        decoded_text = codecs.decode(
+            await decode(
+                os.path.join(app.instance_path, "inputs", image_filename),
+            ),
+            "rot_13",
         )
 
         # write text to file
