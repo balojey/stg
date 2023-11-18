@@ -12,6 +12,7 @@ quart = "^0.18.4"
 quart-wtf = "^0.0.1"
 quart-uploads = "^0.0.1"
 python-dotenv = "^1.0.0"
+cryptography = "^41.0.5"
 
 
 [build-system]

@@ -8,6 +8,7 @@ from quart import (
     request,
 )
 from quart_wtf.csrf import CSRFProtect
+from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 import os
 from werkzeug.utils import secure_filename
@@ -24,6 +25,10 @@ app.config[
 ] = "442cca115de8939240fd9531607188e8790f5eb49afdc8e7f064e1ce8f22772e"  # os.getenv("SECRET_KEY")
 app.config["WTF_CSRF_ENABLED"] = os.getenv("WTF_CSRF_ENABLED")
 
+# Fernet
+key = Fernet.generate_key()
+fernet = Fernet(key)
+
 
 def run() -> None:
     app.run(debug=False, use_reloader=True)
@@ -35,7 +40,7 @@ async def index():
     decode_form = await DecodeForm().create_form()
 
     if await encode_form.validate_on_submit():
-        secret_text = codecs.encode(encode_form.secret_text.data, "rot_13")
+        secret_text = fernet.encrypt(encode_form.secret_text.data.encode()).decode()
         image = encode_form.image.data
         filename = secure_filename(image.filename)
         await image.save(os.path.join(app.instance_path, "inputs", filename))
@@ -71,12 +76,11 @@ async def index():
         filename = await rename(filename, os.path.join(app.instance_path, "inputs"))
 
         # decode text from image
-        decoded_text = codecs.decode(
+        decoded_text = fernet.decrypt(
             await decode(
                 os.path.join(app.instance_path, "inputs", filename),
-            ),
-            "rot_13",
-        )
+            )
+        ).decode()
 
         # delete input file
         # os.remove(os.path.join(app.instance_path, "inputs", filename))
@@ -146,7 +150,7 @@ async def file():
         await encode(
             os.path.join(app.instance_path, "inputs", image_filename),
             os.path.join(app.instance_path, "outputs", image_filename),
-            codecs.encode(secret_text, "rot_13"),
+            fernet.encrypt(secret_text.encode()).decode(),
         )
 
         # delete input file
@@ -172,12 +176,11 @@ async def file():
         )
 
         # decode text from image
-        decoded_text = codecs.decode(
+        decoded_text = fernet.decrypt(
             await decode(
                 os.path.join(app.instance_path, "inputs", image_filename),
-            ),
-            "rot_13",
-        )
+            )
+        ).decode()
 
         # write text to file
         await write_text_to_file(
