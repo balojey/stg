@@ -30,10 +30,6 @@ key = Fernet.generate_key()
 fernet = Fernet(key)
 
 
-def run() -> None:
-    app.run(debug=False, use_reloader=True)
-
-
 @app.route("/", methods=["GET", "POST"])
 async def index():
     encode_form = await EncodeForm().create_form()
